@@ -1,6 +1,9 @@
 const path = require('path');
 const express = require('express');
 
+// create variable to call the util/path.js page 
+const rootDir = require('../util/path');
+
 const router = express.Router();
 
 // /admin/add-product => GET
