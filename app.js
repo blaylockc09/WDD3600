@@ -3,13 +3,17 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const errorController = require('./controllers/errors');
 const app = express();
+
+// allows us to set values globally. 
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
 
 // the routes for the admin and shop pages. 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
-
-const { error } = require('console');
 
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -21,9 +25,7 @@ app.use(shopRoutes);
 
 
 // catch all router, if the route cannot be handled it will throw a 404 error and display "Page Not Found"
-app.use((req,res,next) => {
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'))
-});
+app.use(errorController.get404);
 
 
 
