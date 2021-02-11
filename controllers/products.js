@@ -1,5 +1,5 @@
 const Product = require('../models/product');
-
+// gets add product page
 exports.getAddProduct = (req, res, next) => {
   res.render('add-product', {
     pageTitle: 'Add Product',
@@ -10,12 +10,14 @@ exports.getAddProduct = (req, res, next) => {
   });
 };
 
+// post = saves product to the JSON file.
 exports.postAddProduct = (req, res, next) => {
   const product = new Product(req.body.title);
   product.save();
   res.redirect('/');
 };
 
+// fetch = reads items from JSON file.
 exports.getProducts = (req, res, next) => {
   Product.fetchAll(products => {
     res.render('shop', {
