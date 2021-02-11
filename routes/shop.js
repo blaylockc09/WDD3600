@@ -2,12 +2,9 @@ const path = require('path');
 
 const express = require('express');
 
+const productsController = require('../controllers/products');
+
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-    // dirname gets the path of the local machine, adding '../' will go up a level so we can get to the views folder.
-    res.sendFile(path.join(__dirname, '../', 'views', 'shop.html'));
-});
-
+router.get('/', productsController.getProducts);
 module.exports = router;
-
