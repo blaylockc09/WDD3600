@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
+// use the cart.JSON for the file
 const p = path.join(
   path.dirname(require.main.filename),
   'data',
