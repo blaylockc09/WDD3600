@@ -28,6 +28,6 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 
-
+// Listen for port 3000
 app.listen(3000);
 

@@ -1,6 +1,7 @@
 const Product = require('../models/product');
 const Cart = require('../models/cart');
 
+// get products for the normal user
 exports.getProducts = (req, res, next) => {
   Product.fetchAll(products => {
     res.render('shop/product-list', {
@@ -56,7 +57,7 @@ exports.getCart = (req, res, next) => {
   });
 };
 
-
+// post the product to the cart
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
   Product.findById(prodId, product => {
@@ -65,7 +66,7 @@ exports.postCart = (req, res, next) => {
   res.redirect('/cart');
 };
 
-
+// post the delete product to the cart (Delete the product) 
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
   Product.findById(prodId, product => {
@@ -74,7 +75,7 @@ exports.postCartDeleteProduct = (req, res, next) => {
   });
 };
 
-
+// get all orders 
 exports.getOrders = (req, res, next) => {
   res.render('shop/orders', {
     path: '/orders',
@@ -82,7 +83,7 @@ exports.getOrders = (req, res, next) => {
   });
 };
 
-
+// get the checkout view for the user
 exports.getCheckout = (req, res, next) => {
   res.render('shop/checkout', {
     path: '/checkout',

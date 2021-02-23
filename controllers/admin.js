@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 
+// get the add-product for the admin 
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
@@ -8,6 +9,7 @@ exports.getAddProduct = (req, res, next) => {
   });
 };
 
+// post the addProduct for the admin 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
   const imageUrl = req.body.imageUrl;
@@ -18,6 +20,7 @@ exports.postAddProduct = (req, res, next) => {
   res.redirect('/');
 };
 
+// get the edit-product for the admin 
 exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;
   if (!editMode) {
@@ -37,6 +40,7 @@ exports.getEditProduct = (req, res, next) => {
   });
 };
 
+// post the edited product for the admin 
 exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId;
   const updatedTitle = req.body.title;
@@ -54,6 +58,7 @@ exports.postEditProduct = (req, res, next) => {
   res.redirect('/admin/products');
 };
 
+//get all products for the admin
 exports.getProducts = (req, res, next) => {
   Product.fetchAll(products => {
     res.render('admin/products', {
@@ -64,6 +69,7 @@ exports.getProducts = (req, res, next) => {
   });
 };
 
+// Delete the product for the Admin
 exports.postDeleteProduct = (req, res, next) => { 
   const prodId = req.body.productId;
   Product.deleteById(prodId);

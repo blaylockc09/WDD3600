@@ -8,6 +8,7 @@ const p = path.join(
   'cart.json'
 );
 
+// export the cart class
 module.exports = class Cart {
   static addProduct(id, productPrice) {
     // Fetch the previous cart
@@ -39,6 +40,8 @@ module.exports = class Cart {
     });
   }
 
+  // delete the product from the cart.
+  // then update the cart and price
   static deleteProduct(id, productPrice) {
     fs.readFile(p, (err, fileContent) => {
       if (err) {
@@ -62,6 +65,7 @@ module.exports = class Cart {
     });
   }
 
+//get the cart for the user
   static getCart(cb) {
     fs.readFile(p, (err, fileContent) => {
       const cart = JSON.parse(fileContent);
