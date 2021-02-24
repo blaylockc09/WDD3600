@@ -27,3 +27,11 @@ If you wish to run the application normally you can enter:
 Run Command:
 
 	npm start-server
+
+
+
+
+## Database
+This application now requires a Database connection. I am using MySQL but you are welcome to use anything that you would like, however the schema will need to be the same.
+
+Once you have set up your database and copied the schema you will need to enter your database information in to "util/database.js".

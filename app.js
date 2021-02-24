@@ -4,6 +4,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const errorController = require('./controllers/errors');
+
+const db = require('./util/database');
+
 const app = express();
 
 // allows us to set values globally. 
@@ -14,6 +17,7 @@ app.set('views', 'views');
 // the routes for the admin and shop pages. 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
+
 
 app.use(bodyParser.urlencoded({extended: false}));
 

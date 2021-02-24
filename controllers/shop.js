@@ -2,37 +2,46 @@ const Product = require('../models/product');
 const Cart = require('../models/cart');
 
 // get products for the normal user
+// from the database
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll(products => {
+  Product.fetchAll()
+  .then(([rows]) => {
     res.render('shop/product-list', {
-      prods: products,
+      prods: rows,
       pageTitle: 'All Products',
       path: '/products'
     });
-  });
+  })
+  .catch(err => console.log(err)); // log the error in the console if there is one.
 };
 
 // get the product details using the ID
+// 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findById(prodId, product => {
-    res.render('shop/product-detail', {
-      product: product,
-      pageTitle: product.title,
-      path: '/products'
-    });
-  });
+  Product.findById(prodId) 
+  .then(([product]) => {
+      res.render('shop/product-detail', {
+        product: product[0], // use the 0 index to get just the object from the array that is returned. 
+        pageTitle: product.title,
+        path: '/products'
+      });
+  })
+  .catch(err => console.log(err)); // log the error in the console if there is one.
 };
 
 // get all products for the index page
+// from the database
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll(products => {
+  Product.fetchAll()
+  .then(([rows, fieldData]) => {
     res.render('shop/index', {
-      prods: products,
+      prods: rows,
       pageTitle: 'Shop',
       path: '/'
-    });
   });
+  })
+  .catch(err => console.log(err));  // log the error in the console if there is one.
 };
 
 //get the cart information that is saved in the cart.JSON
