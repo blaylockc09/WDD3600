@@ -114,7 +114,7 @@ exports.postCartDeleteProduct = (req, res, next) => {
 };
 
 
-// get products for cart
+// get products from cart and post to orders
 exports.postOrder = (req, res, next) => {
   let fetchedCart;
   req.user
@@ -144,6 +144,7 @@ exports.postOrder = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
+
 // get all orders 
 exports.getOrders = (req, res, next) => {
   req.user

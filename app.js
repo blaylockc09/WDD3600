@@ -60,6 +60,7 @@ Order.belongsToMany(Product, { through: OrderItem });
 
 // sync the existing models to the database/ create tables that do not exist
 sequelize
+    //.sync({ force: true})
     .sync()
     .then(result => {
     return User.findByPk(1);
