@@ -2,10 +2,9 @@ const http = require('http');
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const errorController = require('./controllers/errors');
-
-const mongoConnect = require('./util/database').mongoConnect;
 
 const User = require('./models/user');
 
@@ -29,9 +28,9 @@ app.use(express.static(path.join(__dirname,'public')));
 // find user by the id
 // 
 app.use((req, res, next) => {
-  User.findById('6049002c3096ca37040b0d26')
+  User.findById('6064c789a40ce14ae4f07034')
   .then(user => {
-    req.user = new User(user.name, user.email, user.cart, user._id);
+    req.user = user;
     next();
   })
   .catch(err => console.log(err));
@@ -45,8 +44,22 @@ app.use(shopRoutes);
 // catch all router, if the route cannot be handled it will throw a 404 error and display "Page Not Found"
 app.use(errorController.get404);
 
-mongoConnect(() => {
+mongoose.connect('mongodb+srv://blaylock:passwordpassword1@cluster0.x59f4.mongodb.net/shop?retryWrites=true&w=majority').then(result => {
+  User.findOne().then(user => {
+    if (!user) {
+      const user = new User({
+        name: 'Chris',
+        email: 'blaylock@mail.com',
+        cart: {
+          items:[]
+        }
+      });
+      user.save();
+    }
+  });
   app.listen(3000);
+}).catch(err => {
+  console.log(err);
 });
 
 

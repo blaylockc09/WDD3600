@@ -1,5 +1,39 @@
-const mongodb = require('mongodb');
-const getDb = require('../util/database').getDb;
+const mongoose = require('mongoose');
+
+const Schema = mongoose.Schema;
+// create the product class and define the constructor
+const productSchema = new Schema({
+  title: {
+    type: String,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  imageUrl: {
+    type: String,
+    required: true
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
+});
+
+module.exports = mongoose.model('Product', productSchema);
+
+
+// comment out old code that was used in previous modules
+
+
+/* const mongodb = require('mongodb');
+//const getDb = require('../util/database').getDb;
 
 // create the product class that we will use to save and retrieve from the DB.
 class Product {
@@ -81,4 +115,4 @@ save() {
 // remove sequelize
 
 // export the product
-module.exports = Product;
+module.exports = Product; */
