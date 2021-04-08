@@ -10,13 +10,15 @@ exports.getProducts = (req, res, next) => {
       res.render('shop/product-list', {
         prods: products,
         pageTitle: 'All Products',
-        path: '/products'
+        path: '/products',
+        isAuthenticated : req.session.isLoggedIn
       });
     })
     .catch(err => {// log the error in the console if there is one.
       console.log(err);
     });
 };
+
 // get the product details using the ID
 //  remove old sequelize 
 exports.getProduct = (req, res, next) => {
@@ -26,11 +28,13 @@ exports.getProduct = (req, res, next) => {
     res.render('shop/product-detail', {
       product: product,
       pageTitle: product.title,
-      path: '/products'
+      path: '/products',
+      isAuthenticated : req.session.isLoggedIn
     });
   })
   .catch(err => console.log(err));
 };
+
 // get all products for the index page
 // from the database
 exports.getIndex = (req, res, next) => {
@@ -39,13 +43,15 @@ exports.getIndex = (req, res, next) => {
     res.render('shop/index', {
       prods: products,
       pageTitle: 'Shop',
-      path: '/'
+      path: '/',
+      isAuthenticated : req.session.isLoggedIn
     });
   })
   .catch(err => {
     console.log(err);
   });
 };
+
 //get the cart information
 exports.getCart = (req, res, next) => {
   req.user
@@ -56,11 +62,13 @@ exports.getCart = (req, res, next) => {
       res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
-        products: products
+        products: products,
+        isAuthenticated : req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
 };
+
 // post the product to the cart
 // if the product is already in the cart increase the quantity amount
 exports.postCart = (req, res, next) => {
@@ -115,14 +123,16 @@ exports.postOrder = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
+
 // get all orders 
 exports.getOrders = (req, res, next) => {
-  Orders.find({ 'user.userId' : req.user._id })
-  .then(orders => {
+  Order.find({ 'user.userId': req.user._id })
+    .then(orders => {
       res.render('shop/orders', {
         path: '/orders',
         pageTitle: 'Your Orders',
-        orders: orders
+        orders: orders,
+        isAuthenticated : req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
@@ -133,6 +143,7 @@ exports.getOrders = (req, res, next) => {
 exports.getCheckout = (req, res, next) => {
   res.render('shop/checkout', {
     path: '/checkout',
-    pageTitle: 'Checkout'
+    pageTitle: 'Checkout',
+    isAuthenticated : req.isLoggedIn
   });
 };
