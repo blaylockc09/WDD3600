@@ -28,6 +28,8 @@ Run Command:
 
 	npm start-server
 
+----------------------------
+This application is limited on the amount of emails it can send. If there is an error you may have to wait until tomorrow for your emails. 
 
 
 

@@ -66,40 +66,45 @@ exports.postEditProduct = (req, res, next) => {
   const updatedImageUrl = req.body.imageUrl;
   const updatedDesc = req.body.description;
 
-  Product.findById(prodId).then(product => {
+  Product.findById(prodId)
+  .then(product => {
+    if (product.userId.toString() !== req.user._id.toString()) {
+      return res.redirect('/');
+    }
     product.title = updatedTitle;
     product.price = updatedPrice;
     product.description = updatedDesc;
     product.imageUrl = updatedImageUrl;
-    return product.save()
-  }).then(result => {
+    return product.save().then(result => {
       console.log('UPDATED PRODUCT!');
       res.redirect('/admin/products');
-    })
-    .catch(err => console.log(err));
+    });
+  })
+  .catch(err => console.log(err));
 };
 
 //get all products for the admin
+// only show products that were created by that user
 exports.getProducts = (req, res, next) => {
-  Product.find()
+  Product.find({ userId: req.user._id })
     .then(products => {
+      console.log(products);
       res.render('admin/products', {
         prods: products,
         pageTitle: 'Admin Products',
-        path: '/admin/products',
-        isAuthenticated : req.isLoggedIn
+        path: '/admin/products'
       });
     })
     .catch(err => console.log(err));
 };
 
 // Delete the product for the Admin
-exports.postDeleteProduct = (req, res, next) => { 
+exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findByIdAndRemove(prodId)
-  .then(() => {
-    console.log('DESTROYED PRODUCT');
-    res.redirect('/admin/products');
-  })
-  .catch(err => console.log(err));
+  Product.deleteOne({ _id: prodId, userId: req.user._id })
+    .then(() => {
+      console.log('DESTROYED PRODUCT');
+      res.redirect('/admin/products');
+    })
+    .catch(err => console.log(err));
 };

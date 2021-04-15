@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore= require('connect-mongodb-session')(session);
+const csrf = require('csurf');
+const flash = require('connect-flash');
 
 const errorController = require('./controllers/errors');
 const User = require('./models/user');
@@ -17,6 +19,9 @@ const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions'
 });
+
+// create a var that uses the csrf function
+const csrfProtection = csrf();
 
 // allows us to set values globally. 
 app.set('view engine', 'ejs');
@@ -44,6 +49,8 @@ app.use(
   })
 );
 
+app.use(csrfProtection);
+app.use(flash());
 // find user by the id
 // 
 app.use((req, res, next) => {
@@ -58,6 +65,12 @@ app.use((req, res, next) => {
   .catch(err => console.log(err));
 });
 
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+})
+
 // use the shop and admin routes
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
@@ -71,20 +84,9 @@ mongoose.connect(
   MONGODB_URI
 )
 .then(result => {
-  User.findOne().then(user => {
-    if (!user) {
-      const user = new User({
-        name: 'Chris',
-        email: 'blaylock@mail.com',
-        cart: {
-          items:[]
-        }
-      });
-      user.save();
-    }
-  });
   app.listen(3000);
-}).catch(err => {
+})
+.catch(err => {
   console.log(err);
 });
 
