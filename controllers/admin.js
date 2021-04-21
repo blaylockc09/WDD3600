@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator/check');
 const Product = require('../models/product');
 
 // get the add-product for the admin 
