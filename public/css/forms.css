@@ -21,3 +21,9 @@
 .form-control textarea:focus {
   outline-color: #033bd3;
 }
+
+/* conditional CSS for the invalid input */
+.form-control input.invalid,
+.form-control textarea.invalid {
+  border-color: red;
+}
