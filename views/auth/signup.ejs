@@ -8,9 +8,11 @@
    <%- include('../includes/navigation.ejs') %>
 
     <main>
+        <!-- render error message based on users input -->
         <% if (errorMessage) { %>
             <div class="user-message user-message--error"><%= errorMessage %></div>
         <% } %>
+        <!-- keep the old input data if there is an error -->
         <form class="login-form" action="/signup" method="POST" novalidate>
             <div class="form-control">
                 <label for="email">E-Mail</label>
