@@ -59,10 +59,15 @@ app.use((req, res, next) => {
   }
   User.findById(req.session.user._id)
   .then(user => {
+    if (!user) {
+      return next();// continue if user is not found. 
+    }
     req.user = user;
     next();
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    next(new Error(err));
+  });
 });
 
 app.use((req, res, next) => {
@@ -76,8 +81,20 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
+// route to 500 if 500 error is thrown
+app.get('/500', errorController.get500);
+
 // catch all router, if the route cannot be handled it will throw a 404 error and display "Page Not Found"
 app.use(errorController.get404);
+
+// error handling middleware
+app.use((error, req, res, next) => {
+  res.status(500).render('500', {
+    pageTitle: 'Error!',
+    path: '/500',
+    isAuthenticated: req.session.isLoggedIn
+  });
+});
 
 // connect using mongoose
 mongoose.connect(

@@ -14,8 +14,10 @@ exports.getProducts = (req, res, next) => {
         isAuthenticated : req.session.isLoggedIn
       });
     })
-    .catch(err => {// log the error in the console if there is one.
-      console.log(err);
+    .catch(err =>  {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -32,7 +34,11 @@ exports.getProduct = (req, res, next) => {
       isAuthenticated : req.session.isLoggedIn
     });
   })
-  .catch(err => console.log(err));
+  .catch(err =>  {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 };
 
 // get all products for the index page
@@ -46,8 +52,10 @@ exports.getIndex = (req, res, next) => {
       path: '/'
     });
   })
-  .catch(err => {
-    console.log(err);
+  .catch(err =>  {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
   });
 };
 
@@ -65,7 +73,11 @@ exports.getCart = (req, res, next) => {
         isAuthenticated : req.session.isLoggedIn
       });
     })
-    .catch(err => console.log(err));
+    .catch(err =>  {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 // post the product to the cart
@@ -90,7 +102,11 @@ exports.postCartDeleteProduct = (req, res, next) => {
     .then(result => {
       res.redirect('/cart');
     })
-    .catch(err => console.log(err));
+    .catch(err =>  {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 
@@ -119,7 +135,11 @@ exports.postOrder = (req, res, next) => {
     .then(() => {
       res.redirect('/orders');
     })
-    .catch(err => console.log(err));
+    .catch(err =>  {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 
@@ -134,7 +154,11 @@ exports.getOrders = (req, res, next) => {
         isAuthenticated : req.session.isLoggedIn
       });
     })
-    .catch(err => console.log(err));
+    .catch(err =>  {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 
