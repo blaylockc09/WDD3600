@@ -3,7 +3,7 @@ exports.get404 = (req, res, next) => {
     res.status(404).render('404', { 
     pageTitle: 'Could Not Find Page', 
     path: '/404',
-    isAuthenticated : req.isLoggedIn});
+    isAuthenticated :  req.session.isLoggedIn});
   };
   // Handles 500 error and sets page title to error.
   exports.get500 = (req, res, next) => {

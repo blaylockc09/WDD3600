@@ -7,11 +7,12 @@ const session = require('express-session');
 const MongoDBStore= require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
-
+const multer = require('multer');
 const errorController = require('./controllers/errors');
+const shopController = require('../controllers/shop');
+const isAuth = require('../middleware/is-auth');
 const User = require('./models/user');
-
-const MONGODB_URI = 'mongodb+srv://blaylock:passwordpassword1@cluster0.x59f4.mongodb.net/shop?retryWrites=true&w=majority';
+const MONGODB_URI = 'Please enter you DB information to use this app';
 
 const app = express();
 //create store connection 
@@ -22,6 +23,33 @@ const store = new MongoDBStore({
 
 // create a var that uses the csrf function
 const csrfProtection = csrf();
+
+//
+const date = new Date().toISOString();
+//console.log(date);
+// store the file/filename
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+
+  }
+});
+
+// set up a filter so that the user can only upload png/jpeg images
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg'
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
 
 // allows us to set values globally. 
 app.set('view engine', 'ejs');
@@ -35,9 +63,12 @@ const authRoutes = require('./routes/auth');
 
 app.use(bodyParser.urlencoded({extended: false}));
 
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter}).single('image'));
+
 // use this to connect the css files. lets express access the file 'public'
 app.use(express.static(path.join(__dirname,'public')));
-
+// setup directory to use the images
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // use this to configure the session 
 app.use(
@@ -49,7 +80,7 @@ app.use(
   })
 );
 
-app.use(csrfProtection);
+
 app.use(flash());
 // find user by the id
 // 
@@ -72,6 +103,16 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
+  next();
+})
+
+// /create-order => POST orders
+app.post('/create-order', isAuth, shopController.postOrder);
+
+// init csrf middleware
+app.use(csrfProtection);
+
+app.use((req, res, next) => {
   res.locals.csrfToken = req.csrfToken();
   next();
 })
@@ -92,7 +133,7 @@ app.use((error, req, res, next) => {
   res.status(500).render('500', {
     pageTitle: 'Error!',
     path: '/500',
-    isAuthenticated: req.session.isLoggedIn
+    isAuthenticated: req.isLoggedIn
   });
 });
 

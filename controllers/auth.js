@@ -117,7 +117,7 @@ exports.postLogin = (req, res, next) => {
           res.redirect('/login');
         });
     })
-    .catch(err =>  {
+    .catch(err => {
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);
@@ -131,7 +131,7 @@ exports.postSignup = (req, res, next) => {
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    //console.log(errors.array());
+    console.log(errors.array());
     return res.status(422).render('auth/signup', {
       path: '/signup',
       pageTitle: 'Signup',
@@ -157,13 +157,21 @@ exports.postSignup = (req, res, next) => {
     })
     .then(result => {
       res.redirect('/login');
+      // return transporter.sendMail({
+      //   to: email,
+      //   from: 'shop@node-complete.com',
+      //   subject: 'Signup succeeded!',
+      //   html: '<h1>You successfully signed up!</h1>'
+      // });
     })
-    .catch(err =>  {
+    .catch(err => {
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);
     });
 };
+
+
 // destroy the session and log out
 exports.postLogout = (req, res, next) => {
   req.session.destroy(err => {
